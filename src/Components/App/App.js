@@ -4,7 +4,7 @@ import './App.css';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
 import SearchBar from '../SearchBar/SearchBar';
-
+import Spotify from '../../util/Spotify.js';
 
 class App extends Component {
   constructor(props) {
@@ -87,7 +87,6 @@ class App extends Component {
 
   savePlaylist() {
     let trackURIs = this.state.playlistTracks.map(track => track.uri);
-
   }
 
   search(term) {
