@@ -1,11 +1,11 @@
 import React from 'react';
 
-const clientId = d3f60f3029d54c3cac8e91e6bc672d28;
+const clientId = 'd3f60f3029d54c3cac8e91e6bc672d28';
 const redirectUri = "http://localhost:3000/";
 
 let userAccessToken;
 
-const Spotify = {
+export const Spotify = {
   getAccessToken() {
     if (accessToken) {
     return accessToken;
@@ -22,23 +22,32 @@ const Spotify = {
     const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
     window.location = accessUrl;
     }
+  },
+  search(term) {
+      const accessToken = Spotify.getAccessToken();
+      return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      })
+      .then(response => response.json())
+      .then(jsonResponse => jsonResponse.tracks.items.map(track => ({
+        id: track.id,
+        name: track.name,
+        artist: track.artists[0].name,
+        album: track.album.name,
+        uri: track.uri
+      })));
+  },
+  savePlaylist(playlistName, trackUrisArr) {
+    if (!playlistName, !trackUrisArr) return;
+    const accessToken = Spotify.getAccessToken();
+    const headers = {
+      Authorization: `Bearer ${accessToken}`
+    };
+    let userID;
+    return fetch(`https://api.spotify.com/v1/me`, {headers: headers})
+    .then(response => response.json())
+    .then(jsonResponse => userID = jsonResponse.id)
   }
- search(term).then {
-    return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      };
-    })
-    .then(response => response.json());
-    .then(resonse.json.map(track => [
-      id: track.id,
-      name: track.name,
-      artist: track.artists[0].name,
-      album: track.album.name,
-      uri: track.uri
-    ]));
-  });
 }
-
-
-export default Spotify;
