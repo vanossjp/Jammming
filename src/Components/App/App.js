@@ -10,52 +10,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchResults: [
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "1"
-        },
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "2"
-        },
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "3"
-        },
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "4"
-        }],
-      playlistName: "Custom Title",
-      playlistTracks: [
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "1"
-        },
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "2"
-        },
-        {
-          name: "Track Name",
-          artist: "Test Artist",
-          album: "Test Album",
-          id: "3"
-        },
-        ]
+      searchResults: [],
+      playlistName: 'New Playlist',
+      playlistTracks: []
     };
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -86,7 +43,14 @@ class App extends Component {
   }
 
   savePlaylist() {
-    let trackURIs = this.state.playlistTracks.map(track => track.uri);
+    const trackUrisArr = this.state.playlistTracks.map(track => track.uri);
+    Spotify.savePlaylist(this.state.playlistName, trackUrisArr)
+    .then(()=> {
+      this.setState({
+        playlistName: 'New Playlist',
+        playlistTracks: []
+      });
+    });
   }
 
   search(term) {
@@ -97,17 +61,6 @@ class App extends Component {
   }
 
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
@@ -125,7 +78,6 @@ class App extends Component {
           />
           // Add a Playlist component -->
           <Playlist
-            playlistName={this.state.playlistName}
             playlistTracks={this.state.playlistTracks}
             onRemove={this.removeTrack}
             onNameChange={this.updatePlaylistName}
